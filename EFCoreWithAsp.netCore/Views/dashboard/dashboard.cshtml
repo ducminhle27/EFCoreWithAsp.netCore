@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- Thêm jQuery -->
+</head>
+<body>
+    <h1>Current Count: <span id="count">@Model</span></h1>
+
+    <!-- Nút cộng và trừ -->
+    <button id="increment">+</button>
+    <button id="decrement">-</button>
+
+    <!-- Biểu đồ Line Chart -->
+    <canvas id="myChart" width="400" height="200"></canvas>
+
+    <script>
+        // Biểu đồ line graph
+        var chartData = [@Model]; // Giá trị ban đầu từ controller
+        var labels = ['Start']; // Nhãn biểu đồ
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Counter Value',
+                    data: chartData,
+                    borderColor: 'rgb(75, 192, 192)',
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Cập nhật biểu đồ
+        function updateChartData(newData) {
+            chartData.push(newData);
+            labels.push('Update ' + labels.length);
+            myChart.update();
+        }
+
+        // AJAX cho dấu cộng
+        $("#increment").click(function () {
+            $.ajax({
+                url: '@Url.Action("Increment", "Dashboard")', // URL action
+                type: 'POST',
+                success: function (response) {
+                    $("#count").text(response);  // Cập nhật giá trị bộ đếm
+                    updateChartData(response);   // Cập nhật biểu đồ
+                }
+            });
+        });
+
+        // AJAX cho dấu trừ
+        $("#decrement").click(function () {
+            $.ajax({
+                url: '@Url.Action("Decrement", "Dashboard")', // URL action
+                type: 'POST',
+                success: function (response) {
+                    $("#count").text(response);  // Cập nhật giá trị bộ đếm
+                    updateChartData(response);   // Cập nhật biểu đồ
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<nav class="navbar navbar-expand-lg" style="background: linear-gradient(135deg, #6a11cb, #2575fc); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
+    ">
+    <div class="container-fluid">
+        <ul class="navbar-nav d-flex flex-row justify-content-around w-100">
+            <!-- Employees -->
+            <li class="nav-item">
+                <a asp-controller="Employee" asp-action="Index" class="nav-link text-white fw-bold">
+                    <i class="bi bi-people"></i> Employees
+                </a>
+            </li>
+            <!-- Department -->
+            <li class="nav-item">
+                <a asp-controller="Department" asp-action="Index" class="nav-link text-white fw-bold">
+                    <i class="bi bi-building"></i> Department
+                </a>
+            </li>
+            <!-- Department Adding -->
+            <li class="nav-item">
+                <a asp-controller="Department" asp-action="Add" class="nav-link text-white fw-bold">
+                    <i class="bi bi-plus-square"></i> Add Department
+                </a>
+            </li>
+            <!-- Employees Adding -->
+            <li class="nav-item">
+                <a asp-controller="Employee" asp-action="Add" class="nav-link text-white fw-bold">
+                    <i class="bi bi-person-plus"></i> Add Employees
+                </a>
+            </li>
+            <!-- Dashboard -->
+            <li class="nav-item">
+                <a asp-controller="dashboard" asp-action="dashboard" class="nav-link text-white fw-bold">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <!-- Chart -->
+            <li class="nav-item">
+                <a asp-controller="EmployeeChart" asp-action="PieChart" class="nav-link text-white fw-bold">
+                    <i class="bi bi-pie-chart"></i> Chart
+                </a>
+            </li>
+            <!-- BarChart -->
+            <li class="nav-item">
+                <a asp-controller="EmployeeSalary" asp-action="BarChart" class="nav-link text-white fw-bold">
+                    <i class="bi bi-bar-chart"></i> BarChart
+                </a>
+            </li>
+            <!-- Logout -->
+            <li class="nav-item">
+                <a asp-controller="Account" asp-action="Login" class="nav-link text-white fw-bold">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Thêm Bootstrap Icons từ CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet" />
+
+<div style="background-color: #f5edf7; padding: 20px; border-radius: 0px;">
+
+    <!-- Container chính chia thành 2 cột -->
+    <div style="display: flex; gap: 20px;">
+
+        <!-- Cột bên trái: Bar Chart và Calendar -->
+        <div style="width: 50%;">
+
+            <!-- Biểu đồ Bar Chart -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px;">Top 5 Salaries</h3>
+                <canvas id="barChartCanvas" style="width: 100%; height: 300px;"></canvas>
+            </div>
+
+            <!-- Lịch -->
+            <div class="calendar-container" style="margin-top: 20px;">
+                <div class="calendar-header" style="display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #56ccf2, #2f80ed); color: white; padding: 10px; border-radius: 8px;">
+                    <button onclick="changeMonth(-1)" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">«</button>
+                    <h2 id="currentDate" style="margin: 0; font-size: 24px;"></h2>
+                    <button onclick="changeMonth(1)" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">»</button>
+                </div>
+                <div class="calendar" id="calendar" style="text-align: center; margin-top: 10px;"></div>
+            </div>
+        </div>
+
+        <!-- Vạch kẻ trắng -->
+        <div style="width: 15px; background-color: #ffffff; height: auto;"></div>
+
+        <!-- Cột bên phải: Pie Chart -->
+        <div style="width: 50%; display: flex; justify-content: center; align-items: center;">
+            <div style="text-align: center;">
+                <h3 style="margin-bottom: 10px;">Employee Count</h3>
+                <canvas id="employeePieChartCanvas" style="width: 600px; height: 600px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    body {
+     
+        background-color: #f5edf7;
+      
+    }
+    .calendar-container {
+        background-color: #f5edf7;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(to right, #56ccf2, #2f80ed);
+        padding: 15px;
+        border-radius: 8px 8px 0 0;
+        color: white;
+    }
+
+        .calendar-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .calendar-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+    .calendar {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+        .calendar table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .calendar th, .calendar td {
+            width: 14.28%;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .calendar th {
+            color: #2f80ed;
+            font-weight: bold;
+        }
+
+        .calendar td {
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+            .calendar td:hover {
+                background-color: #f2f2f2;
+            }
+
+        .calendar .today {
+            background-color: #2f80ed;
+            color: white;
+            border-radius: 50%;
+        }
+</style>
+
+
+
+
+<script>
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    function renderCalendar(month, year) {
+        const calendar = document.getElementById("calendar");
+        const currentDateHeader = document.getElementById("currentDate");
+
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        currentDateHeader.textContent = `${monthNames[month]} ${year}`;
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        let table = `<table>
+                    <tr>
+                        <th>Su</th><th>Mo</th><th>Tu</th><th>We</th>
+                        <th>Th</th><th>Fr</th><th>Sa</th>
+                    </tr><tr>`;
+
+        for (let i = 0; i < firstDay; i++) {
+            table += `<td></td>`;
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const today = new Date();
+            const isToday =
+                day === today.getDate() &&
+                month === today.getMonth() &&
+                year === today.getFullYear();
+
+            table += `<td class="${isToday ? "today" : ""}">${day}</td>`;
+
+            if ((day + firstDay) % 7 === 0 && day !== daysInMonth) {
+                table += `</tr><tr>`;
+            }
+        }
+
+        table += `</tr></table>`;
+        calendar.innerHTML = table;
+    }
+
+    function changeMonth(step) {
+        currentMonth += step;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar(currentMonth, currentYear);
+    }
+
+    renderCalendar(currentMonth, currentYear);
+</script>
+
+
+
+
+    <!--<canvas id="barChartCanvas" width="800" height="400"></canvas>-->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    fetch('/EmployeeSalary/BarChartData')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => item.firstName);
+            const salaries = data.map(item => item.salary);
+
+            const ctx = document.getElementById('barChartCanvas').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Salary',
+                        data: salaries,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+</script>
+
+
+
+    <!--<canvas id="employeePieChartCanvas" width="300" height="300"></canvas>-->
+
+<!-- Thêm Chart.js từ CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    /* Giới hạn kích thước của canvas */
+    #employeePieChartCanvas {
+        max-width: 450px;
+        max-height: 450px;
+        width: 100%; /* Để cho canvas thay đổi theo chiều rộng của container */
+        height: auto;
+    }
+</style>
+
+<script>
+    // Gọi API để lấy dữ liệu
+    fetch('/EmployeeChart/GetEmployeeCounts')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Dữ liệu trả về từ API:", data);
+
+            // Kiểm tra nếu dữ liệu không hợp lệ
+            if (!Array.isArray(data) || data.length === 0) {
+                console.error("Dữ liệu không hợp lệ hoặc không có dữ liệu.");
+                return;
+            }
+
+            // Tạo mảng labels (Tên phòng ban) và counts (Số lượng nhân viên)
+            const labels = data.map(item => item.deptName);
+            const counts = data.map(item => item.employeeCount);
+
+            // Vẽ biểu đồ Pie Chart
+            const ctx = document.getElementById('employeePieChartCanvas').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie', // Loại biểu đồ tròn
+                data: {
+                    labels: labels, // Tên phòng ban
+                    datasets: [{
+                        data: counts, // Số lượng nhân viên
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Cho phép biểu đồ thay đổi tỷ lệ không giữ tỉ lệ gốc
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 14 // Kích thước chữ trong legend
+                                }
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                size: 14 // Kích thước chữ trong tooltip
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+</script>
