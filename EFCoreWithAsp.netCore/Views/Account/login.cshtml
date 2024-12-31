@@ -1,0 +1,98 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+@section Styles {
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradient tím mộng mơ */
+            color: #ffffff; /* Chữ màu trắng để nổi bật */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.15); /* Nền thẻ trong suốt */
+            border: none;
+            border-radius: 15px;
+            backdrop-filter: blur(10px); /* Hiệu ứng làm mờ */
+            color: #ffffff;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-bottom: 2px solid #ffffff;
+            color: #ffffff;
+            box-shadow: none;
+        }
+
+            .form-control:focus {
+                background: rgba(255, 255, 255, 0.2);
+                outline: none;
+                box-shadow: none;
+                color: #ffffff;
+            }
+
+        .btn {
+            background-color: #8e44ad;
+            border: none;
+            border-radius: 25px;
+        }
+
+            .btn:hover {
+                background-color: #732d91;
+            }
+
+        a {
+            color: #ffccff;
+        }
+
+            a:hover {
+                text-decoration: underline;
+                color: #ff99ff;
+            }
+    </style>
+}
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <div class="text-center mb-4">
+            <div style="width: 80px; height: 80px; background-color: rgba(255, 255, 255, 0.2); border-radius: 50%; margin: 0 auto;">
+                <i class="bi bi-person" style="font-size: 40px; color: #ffffff; line-height: 80px;"></i>
+            </div>
+        </div>
+        <h2 class="text-center mb-4" style="color: #ffffff;">Sign In</h2>
+
+        @using (Html.BeginForm())
+        {
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-0"><i class="bi bi-person-fill" style="color: #ffffff;"></i></span>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Username" required />
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-0"><i class="bi bi-lock-fill" style="color: #ffffff;"></i></span>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required />
+                </div>
+            </div>
+         
+            <div class="mb-3">
+                <input type="submit" value="Sign In" class="btn w-100" />
+            </div>
+      
+        }
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger mt-3" role="alert">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+    </div>
+</div>

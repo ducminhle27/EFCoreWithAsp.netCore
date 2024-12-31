@@ -1,0 +1,51 @@
+﻿@model DepartmentViewModel
+@{
+    ViewData["Title"] = "Add New Course";
+}
+
+<div class="card shadow-sm" style="width: 24rem; margin: auto; margin-top: 20px;">
+    <div class="card-body text-center" style="background-color: #eae6f8; border-radius: 10px;">
+        <h5 class="card-title" style="color: #6c5ce7; font-weight: bold;">Welcome Home</h5>
+        <p class="card-text" style="color: #636e72;">Discover the details of your home</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-light border" style="color: #6c5ce7; font-weight: bold;">Go Home</a>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <h3 style="color: #6c5ce7; font-weight: bold;">Add New Course</h3>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="p-4" style="background-color: #f4f0fc; border-radius: 10px;">
+                <form asp-controller="Department" asp-action="Add" method="post">
+                    <div class="mb-3">
+                        <label for="Name" class="form-label fw-bold" style="color: #6c5ce7;">Courese Name</label>
+                        <input asp-for="Name" type="text" class="form-control" style="border-color: #6c5ce7;">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn" style="background-color: #6c5ce7; color: white; font-weight: bold;">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f5ff;
+    }
+
+    .btn:hover {
+        background-color: #4b42ad;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .form-control:focus {
+        border-color: #6c5ce7;
+        box-shadow: 0px 0px 5px #b2a3f5;
+    }
+</style>

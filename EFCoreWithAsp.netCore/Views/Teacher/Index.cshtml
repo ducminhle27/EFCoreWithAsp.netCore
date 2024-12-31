@@ -1,0 +1,143 @@
+﻿@model PaginatedList<TeacherViewModel>
+@{
+    ViewData["Title"] = "All Teacher";
+}
+
+
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="p-4">All Teacher</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="d-flex" asp-action="Index" asp-controller="Teacher">
+                <input name="searchString" class="form-control me-1" type="search" placeholder="Search" aria-label="Search" value="@ViewData["CurrentFilter"]">
+                <button class="btn btn-dark" type="submit">Search by name</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <a asp-action="Index" class="text-dark">Back to Full List</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 p-4">
+            <table class="table">
+                <thead>
+                    <tr>
+
+                        <th scope="col"><a class="text-dark" asp-controller="Teacher" asp-action="Index" asp-route-sortOrder=@ViewData["NameSortParam"] asp-route-currentFilter="@ViewData["CurrentFilter"]">FirstName</a></th>
+                        <th scope="col">LastName</th>
+                        <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["DateOfBirthSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-dark">DateOfBirth</a></th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">PhoneNumber</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Salary</th>
+                        <th scope="col">Department</th>
+                        <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["IsActiveSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-dark">IsActive</a></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var employee in Model.Items)
+                    {
+                        <tr>
+
+                            <td>@employee.FirstName</td>
+                            <td>@employee.LastName</td>
+                            <td>@employee.DateOfBirth</td>
+                            <td>@employee.Gender</td>
+                            <td>@employee.Email</td>
+                            <td>@employee.PhoneNumber</td>
+                            <td>@employee.Address</td>
+                            <td>@employee.Salary</td>
+                            <td>@employee.Name</td>
+                            <td>@employee.IsActive</td>
+                            <td><a class="btn btn-dark" asp-controller="Teacher" asp-action="Edit" asp-route-id="@employee.TeacherId">Edit</a></td>
+                            <td><a class="btn btn-danger" asp-action="Delete" asp-controller="Teacher" asp-route-id="@employee.TeacherId" onClick="return confirm('Are you sure you want to delete this employee?')">Delete</a></td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    @*Paging*@
+    <div class="row">
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-6">
+            <nav>
+                <ul class="pagination justify-content-end">
+                    <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                        <a class="page-link text-black" asp-route-pageNumber="1"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                            <span>First</span>
+                        </a>
+                    </li>
+
+                    <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                        <a class="page-link text-black" asp-route-pageNumber="@(Model.PageIndex - 1)"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                            <span>Previous</span>
+                        </a>
+                    </li>
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                            <a class="page-link text-black" asp-route-pageNumber="@i"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-currentFilter="@ViewData["CurrentFilter"]">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                        <a class="page-link text-black" asp-route-pageNumber="@(Model.PageIndex + 1)"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                            <span>Next</span>
+                        </a>
+                    </li>
+                    <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link text-black" asp-route-pageNumber="@Model.TotalPages"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                            <span>Last</span>
+                        </a>
+                    </li>
+
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="cardd">Home</h5>
+        <p class="cardd">Get home details</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-dark">Click here!</a>
+    </div>
+</div>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f5ff;
+    }
+
+    .btn:hover {
+        background-color: #4b42ad;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .form-control:focus {
+        border-color: #6c5ce7;
+        box-shadow: 0px 0px 5px #b2a3f5;
+    }
+</style>

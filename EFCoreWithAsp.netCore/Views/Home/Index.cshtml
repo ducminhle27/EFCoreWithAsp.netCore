@@ -1,0 +1,492 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .student-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr; /* Chia thành 3 cột bằng nhau */
+        gap: 20px; /* Khoảng cách giữa các cột */
+        align-items: center; /* Căn giữa nội dung theo chiều dọc */
+        text-align: left; /* Căn văn bản bên trái */
+        background: #ffffff;
+        padding: 20px; /* Khoảng cách nội dung với viền */
+        border-radius: 10px; /* Bo tròn góc */
+        color: #5f0a87; /* Màu chữ phù hợp với nền */
+    }
+
+    .avatar {
+        display: flex;
+        justify-content: center; /* Căn giữa ảnh theo chiều ngang */
+        align-items: center; /* Căn giữa ảnh theo chiều dọc */
+    }
+
+        .avatar img {
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border: 5px solid #5f0a87;
+        }
+
+    .info p {
+        margin: 5px 0; /* Khoảng cách giữa các dòng */
+        color: #5f0a87; /* Giữ nguyên màu chữ */
+        font-size: 16px; /* Kích thước chữ */
+    }
+</style>
+
+
+<div class="student-card">
+    <div class="avatar">
+        <img src="https://scontent.fhan3-2.fna.fbcdn.net/v/t39.30808-6/458941415_1249098306540412_1800105852728910090_n.jpg?stp=cp6_dst-jpg_s960x960_tt6&_nc_cat=107&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeFDSAbEReMk51qvAu9flEvUwf8UchOTkG3B_xRyE5OQbanmVMa5cPzp0-QPKsrq_iSJ-xF_lgDJnCWm4SGwu9YU&_nc_ohc=R8f-4G7sAOkQ7kNvgGcx6EO&_nc_oc=AdgXAYEuFPznXaRVDRQ7gGF7dWRnz2kbEQhMxwiW_THlwT_1sYvcw0-4alPDLOuzx_uUauB_tPfYjWAE1rkIe_t4&_nc_zt=23&_nc_ht=scontent.fhan3-2.fna&_nc_gid=AyVNUim_X8Z_5IYTRbTN1V8&oh=00_AYDeeIk2bwoZbz2cE8i7ucUW1-Jb4notrxzizGd3qY4gOQ&oe=676B5247" alt="Student Avatar" />
+    </div>
+    <div class="info">
+        <p><strong>Student ID:</strong> 21070156</p>
+        <p><strong>Full Name:</strong> Le Duc Minh</p>
+        <p><strong>Gender:</strong> Male</p>
+        <p><strong>Date of Birth:</strong> 27/04/2003</p>
+        <p><strong>Place of Birth:</strong> Hanoi</p>
+    </div>
+    <div class="info">
+        <p><strong>Class:</strong> AAI2021B 1</p>
+        <p><strong>Program:</strong> QH-2021-Q</p>
+        <p><strong>Degree:</strong> Undergraduate</p>
+        <p><strong>Type:</strong> Full-time</p>
+        <p><strong>Major:</strong> Automation and Informatics</p>
+    </div>
+</div>
+
+
+<div class="container mt-5 pt-5">
+    <div class="row g-4 justify-content-center">
+        <!-- Employees -->
+        <div class="col-3">
+            <a asp-controller="Employee" asp-action="Index" class="dashboard-card">
+                <i class="bi bi-people card-icon"></i>
+                <p>Student</p>
+            </a>
+        </div>
+        <!-- Department -->
+        <div class="col-3">
+            <a asp-controller="Department" asp-action="Index" class="dashboard-card">
+                <i class="bi bi-building card-icon"></i>
+                <p>Course</p>
+            </a>
+        </div>
+        <!-- Add Department -->
+        <div class="col-3">
+            <a asp-controller="Department" asp-action="Add" class="dashboard-card">
+                <i class="bi bi-plus-square card-icon"></i>
+                <p>Add Course</p>
+            </a>
+        </div>
+        <!-- Add Employees -->
+        <div class="col-3">
+            <a asp-controller="Employee" asp-action="Add" class="dashboard-card">
+                <i class="bi bi-person-plus card-icon"></i>
+                <p>Add Student</p>
+            </a>
+        </div>
+        <!-- Dashboard -->
+        <div class="col-3">
+            <a asp-controller="Teacher" asp-action="Index" class="dashboard-card">
+                <i class="bi bi-people card-icon"></i>
+                <p>Teacher</p>
+            </a>
+        </div>
+        <!-- Chart -->
+        <div class="col-3">
+            <a asp-controller="Teacher" asp-action="Add" class="dashboard-card">
+                <i class="bi bi-person-plus card-icon"></i>
+                <p>Add Teacher</p>
+            </a>
+        </div>
+        <!-- BarChart -->
+        <div class="col-3">
+            <a asp-controller="EmployeeSalary" asp-action="BarChart" class="dashboard-card">
+                <i class="bi bi-bar-chart card-icon"></i>
+                <p>Bar Chart</p>
+            </a>
+        </div>
+        <!-- Logout -->
+        <div class="col-3">
+            <a asp-controller="Account" asp-action="Login" class="dashboard-card">
+                <i class="bi bi-box-arrow-right card-icon"></i>
+                <p>Logout</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <!-- Left Column: Bar Chart and Calendar -->
+    <div class="left-column">
+        <!-- Bar Chart -->
+        <div class="chart-container">
+            <h3 class="chart-title">Top 5 Tuition Fee</h3>
+            <canvas id="barChartCanvas"></canvas>
+        </div>
+
+        <!-- Calendar -->
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button onclick="changeMonth(-1)">«</button>
+                <h2 id="currentDate"></h2>
+                <button onclick="changeMonth(1)">»</button>
+            </div>
+            <div class="calendar" id="calendar"></div>
+        </div>
+    </div>
+
+    <!-- Right Column: Pie Chart -->
+    <div class="right-column">
+        <div class="chart-container">
+            <h3 class="chart-title">Student Count</h3>
+            <canvas id="employeePieChartCanvas"></canvas>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+<style>
+    body {
+        background-color: #f9f9fb;
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+
+    .dashboard-card {
+        display: block;
+        text-align: center;
+        background: linear-gradient(135deg, #a4508b, #5f0a87);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard-card p {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+    .card-icon {
+        font-size: 40px;
+    }
+
+    .dashboard-container {
+        display: flex;
+        gap: 20px;
+        margin: 40px 0;
+        padding: 20px;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .left-column,
+    .right-column {
+        flex: 1;
+    }
+
+    .chart-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .chart-title {
+        font-size: 20px;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #ff7eb3, #8b00ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .calendar-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        color: white;
+        padding: 10px;
+        border-radius: 8px 8px 0 0;
+    }
+
+        .calendar-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .calendar-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+    .calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr); /* Chia đều thành 7 cột */
+        gap: 5px;
+        padding: 10px;
+        background-color: #f9f9fb;
+        border-radius: 0 0 8px 8px;
+    }
+
+        .calendar div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px; /* Kích thước số ngày */
+            font-weight: bold;
+            color: #333;
+            background-color: #ffffff;
+            border-radius: 5px;
+            padding: 15px 0; /* Tăng kích thước ô ngày */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+            .calendar div:hover {
+                background-color: #e0f7fa;
+            }
+
+        .calendar .today {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
+    #employeePieChartCanvas {
+        max-width: 300px;
+        max-height: 300px;
+        margin: auto;
+    }
+</style>
+
+
+
+
+
+<script>
+    function renderCalendar(month, year) {
+        const calendar = document.getElementById("calendar");
+        const currentDateHeader = document.getElementById("currentDate");
+
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        currentDateHeader.textContent = `${monthNames[month]} ${year}`;
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        calendar.innerHTML = ""; // Clear the calendar content
+
+        // Fill the blanks for days before the first day of the month
+        for (let i = 0; i < firstDay; i++) {
+            const emptyCell = document.createElement("div");
+            calendar.appendChild(emptyCell);
+        }
+
+        // Fill the calendar with days
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateCell = document.createElement("div");
+            const today = new Date();
+            const isToday =
+                day === today.getDate() &&
+                month === today.getMonth() &&
+                year === today.getFullYear();
+
+            dateCell.textContent = day;
+            if (isToday) {
+                dateCell.classList.add("today");
+            }
+            calendar.appendChild(dateCell);
+        }
+    }
+
+    function changeMonth(step) {
+        currentMonth += step;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar(currentMonth, currentYear);
+    }
+
+    // Initialize calendar
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    renderCalendar(currentMonth, currentYear);
+</script>
+
+
+
+
+    <!--<canvas id="barChartCanvas" width="800" height="400"></canvas>-->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    fetch('/EmployeeSalary/BarChartData')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Kiểm tra dữ liệu
+            if (!Array.isArray(data) || data.length === 0) {
+                console.error('No data returned from API.');
+                return;
+            }
+
+            // Lấy dữ liệu từ API
+            const labels = data.map(item => item.firstName);
+            const salaries = data.map(item => item.salary);
+
+            // Khởi tạo Canvas Context
+            const ctx = document.getElementById('barChartCanvas').getContext('2d');
+
+            // Tạo gradient
+            const backgroundGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            backgroundGradient.addColorStop(0, 'rgba(155, 89, 182, 0.8)'); // Màu tím nhạt
+            backgroundGradient.addColorStop(1, 'rgba(142, 68, 173, 0.6)'); // Màu tím đậm
+
+            const borderGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            borderGradient.addColorStop(0, 'rgba(155, 89, 182, 1)'); // Màu tím nhạt đậm nét
+            borderGradient.addColorStop(1, 'rgba(142, 68, 173, 1)'); // Màu tím đậm nét
+
+            // Tạo biểu đồ
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Salary',
+                        data: salaries,
+                        backgroundColor: backgroundGradient, // Gradient nền
+                        borderColor: borderGradient,         // Gradient viền
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching or rendering data:', error));
+</script>
+
+
+
+
+    <!--<canvas id="employeePieChartCanvas" width="300" height="300"></canvas>-->
+
+<!-- Thêm Chart.js từ CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    /* Giới hạn kích thước của canvas */
+    #employeePieChartCanvas {
+        max-width: 450px;
+        max-height: 450px;
+        width: 100%; /* Để cho canvas thay đổi theo chiều rộng của container */
+        height: auto;
+    }
+</style>
+
+<script>
+    // Gọi API để lấy dữ liệu
+    fetch('/EmployeeChart/GetEmployeeCounts')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Dữ liệu trả về từ API:", data);
+
+            // Kiểm tra nếu dữ liệu không hợp lệ
+            if (!Array.isArray(data) || data.length === 0) {
+                console.error("Dữ liệu không hợp lệ hoặc không có dữ liệu.");
+                return;
+            }
+
+            // Tạo mảng labels (Tên phòng ban) và counts (Số lượng nhân viên)
+            const labels = data.map(item => item.deptName);
+            const counts = data.map(item => item.employeeCount);
+
+            // Vẽ biểu đồ Pie Chart
+            const ctx = document.getElementById('employeePieChartCanvas').getContext('2d');
+
+            // Tạo gradient tím mộng mơ
+            const gradients = [];
+            counts.forEach((_, index) => {
+                const gradient = ctx.createLinearGradient(0, 0, 200, 200); // Tạo gradient
+                gradient.addColorStop(0, `rgba(155, 89, 182, ${0.8 - index * 0.1})`); // Tím nhạt
+                gradient.addColorStop(1, `rgba(142, 68, 173, ${0.6 - index * 0.1})`); // Tím đậm
+                gradients.push(gradient);
+            });
+
+            new Chart(ctx, {
+                type: 'pie', // Loại biểu đồ tròn
+                data: {
+                    labels: labels, // Tên phòng ban
+                    datasets: [{
+                        data: counts, // Số lượng nhân viên
+                        backgroundColor: gradients, // Gradient nền
+                        borderColor: '#ffffff', // Viền trắng để nổi bật
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Cho phép biểu đồ thay đổi tỷ lệ không giữ tỉ lệ gốc
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 14 // Kích thước chữ trong legend
+                                }
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                size: 14 // Kích thước chữ trong tooltip
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+</script>

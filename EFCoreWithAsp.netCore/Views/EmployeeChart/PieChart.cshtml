@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Employee Count by Department";
+}
+
+<h2>Employee Count by Department</h2>
+<canvas id="employeePieChartCanvas" width="300" height="300"></canvas>
+
+<!-- Thêm Chart.js từ CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    /* Giới hạn kích thước của canvas */
+    #employeePieChartCanvas {
+        max-width: 300px;
+        max-height: 300px;
+        width: 100%; /* Để cho canvas thay đổi theo chiều rộng của container */
+        height: auto;
+    }
+</style>
+
+<script>
+    // Gọi API để lấy dữ liệu
+    fetch('/EmployeeChart/GetEmployeeCounts')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Dữ liệu trả về từ API:", data);
+
+            // Kiểm tra nếu dữ liệu không hợp lệ
+            if (!Array.isArray(data) || data.length === 0) {
+                console.error("Dữ liệu không hợp lệ hoặc không có dữ liệu.");
+                return;
+            }
+
+            // Tạo mảng labels (Tên phòng ban) và counts (Số lượng nhân viên)
+            const labels = data.map(item => item.deptName);
+            const counts = data.map(item => item.employeeCount);
+
+            // Vẽ biểu đồ Pie Chart
+            const ctx = document.getElementById('employeePieChartCanvas').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie', // Loại biểu đồ tròn
+                data: {
+                    labels: labels, // Tên phòng ban
+                    datasets: [{
+                        data: counts, // Số lượng nhân viên
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Cho phép biểu đồ thay đổi tỷ lệ không giữ tỉ lệ gốc
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 14 // Kích thước chữ trong legend
+                                }
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                size: 14 // Kích thước chữ trong tooltip
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+</script>
